@@ -2,18 +2,17 @@ const jwt=require('jsonwebtoken');
 const usermodel=require('../models/userModel');
 const isLoggedin= async (req,res,next)=>{
     var tok=req.cookies.token;
-    if(!token){
-        return res.redirect("/login");
-    }else{
-        try{
-            let dec=jwt.verify(token,process.env.jwt_key);
-            let user=await usermodel.findOne({email:dec.email});
+    if(token){
+        let dec=jwt.verify(token,process.env.jwt_key);
+        let user=await usermodel.findOne({email:dec.email});
+        if(user){
             next();
-        }catch(error){
-            console.log("semething went wrong");
-            return res.redirect("/login");
+        }else{
+            res.redirect('users/login');
         }
-
+        
+    }else{
+        return res.redirect('users/login');
     }
 
 }

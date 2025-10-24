@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose=require('mongoose');
 const tm=await mongoose.Schema({
     priority:{type:String,enum:["low","medium","high"],default:"medium"},
     title:{type:String,required:true},
@@ -7,4 +7,4 @@ const tm=await mongoose.Schema({
     assignedto:[{type:mongoose.Schema.Types.ObjectId}],
 
 });
-Module.export=tm;
+module.export=tm;

@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-const us=new mongoose.Schema({
+const mongoose=require('mongoose');
+const userModel=new mongoose.Schema({
     name:{type:String,required:true},
     email:{type:String,required:true,unique:true},
     password:{type : String,required:true},
@@ -8,4 +8,4 @@ const us=new mongoose.Schema({
     tasks:[],
     history:[],
 })
-Module.export=us;
+module.export=userModel;
