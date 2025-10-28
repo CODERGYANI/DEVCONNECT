@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
-const projectModel=new mongoose.Schema({
+const projectSchema=new mongoose.Schema({
     name:{type:String,required:true},
     email:{type:String,required:true,unique:true},
     ownership:{type:String,enum:["public","private"],default:"private"},
@@ -8,5 +8,6 @@ const projectModel=new mongoose.Schema({
     task:[],
     request:[],
     createdBy:{type:String},
-})
-module.export=projectModel;
+});
+const projectModel = mongoose.model('Project', projectSchema);
+module.exports=projectModel;

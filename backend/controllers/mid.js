@@ -1,29 +1,24 @@
 const bcrypt=require('bcryptjs');
 const jwt=require('jsonwebtoken');
-const usermodel=require("../models/userModel");
+const userModel=require("../models/userModel");
 const create=(req,res)=>{
-    var token=req.cookies.token;
-    if(!token){
-        return res.redirect('users/login');
-    }else{
-        return res.redirect('/');
-    }
+    return res.render('createuser');
 };
 const creating= async (req,res) => {
     var {name,email,password}=req.body;
-    const user=await usermodel.findOne({email});
+    const user=await userModel.findOne({email});
     if(user){
-        return res.redirect('user/login');
+        return res.redirect('/user/login');
     }else{
         try{
             bcrypt.genSalt(10,function(err,salt){
                 bcrypt.hash(password,salt,async function(err,hash){
-                    let m=await usermodel.create({
+                    let m=await userModel.create({
                         name,
                         email,
                         password:hash,
                     });
-                    return res.redirect('users/login');
+                    return res.redirect('/user/login');
                 });   
             });
         }catch(error){
@@ -33,15 +28,15 @@ const creating= async (req,res) => {
 };
 const login= async (req,res)=>{
     var {email,password}=req.body;
-    let user= await usermodel.findOne({email});
+    let user= await userModel.findOne({email});
     if(!user){
-        return res.send("users/create");
+        return res.redirect("/user/create");
     }else{
-        let m=await bcrypt.compare(password,hash.password);
+        let m=await bcrypt.compare(password,user.password);
         if(m){
             var token=jwt.sign({email},process.env.jwt_key)
             res.cookie("token",token);
-            return res.redirect('/content');
+            return res.redirect('/user/');
         }else{
             return res.send("something went wrong");
         }
