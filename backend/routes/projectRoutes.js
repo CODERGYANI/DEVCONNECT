@@ -14,6 +14,7 @@ Router.post('/create', async (req, res) => {
         var token = req.cookies.token;
         const dec = jwt.verify(token, process.env.jwt_key);
         const email = dec.email;
+        const discription=req.body.discription;
         var { name, ownership } = req.body;
 
         const user = await userModel.findOne({ email });
@@ -21,13 +22,14 @@ Router.post('/create', async (req, res) => {
             name,
             email,
             ownership,
+            discription,
             host: [user.name],
             createdBy: user.name,
         });
 
         var pro = user.project || [];
         pro.push(project._id);
-        user.project = pro;
+        user.projects = pro;
 
         await user.save();
         res.send("Project created successfully");
@@ -125,5 +127,16 @@ Router.get('/:username/:projectid/granted', async (req, res) => {
         res.send("Error granting access");
     }
 });
+Router.get('/myprojects',async (req,res)=>{
+    let tok=req.cookies.token;
+
+    let dec=jwt.verify(tok,process.env.jwt_key);
+    let email=dec.email;
+    
+    let user= await userModel.findOne({email}).populate('projects');
+    let mp=user.projects;
+    res.render("myprojects",{mp});
+
+})
 
 module.exports = Router;
